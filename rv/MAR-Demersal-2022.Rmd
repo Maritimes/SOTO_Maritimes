@@ -1,0 +1,248 @@
+---
+title: "Scotian Shelf Divisions"
+author: "Robyn Jamieson"
+date: "September 28, 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r Setup, echo=FALSE, warning=FALSE, include=FALSE}
+#clean the workspace
+rm(list=ls())
+
+setwd("~/Work/Ecosystem Reporting/Public report/R Figures")
+
+library(readr)
+library(tidyr)
+library(dplyr)
+library(ggplot2)
+library(cowplot)
+library(scales)
+
+```
+
+
+```{r Import Data echo=FALSE, warning=FALSE, include=FALSE}
+
+#Scotian Shelf Demersal Fish
+
+#Import data and gather species into one factor variable by Division
+#Data is divided into 4VW and 4X 
+
+MAR <- read_csv("MAR_Demersal_Jan18_2022.csv")
+
+#4VW Data
+MAR_4VW <- MAR %>% 
+  select(YEAR, Cod_4VW, Haddock_4VW, SilverHake_4VW, Redfish_4VW, Halibut_4VW, Dogfish_4VW) %>% gather("species", "tonnes", 2:7)
+
+#Select year and total survey values into another variable
+MAR2_4VW <- MAR %>% select(YEAR, TotDemersal_4VW)
+
+#4X East Data
+MAR_4X <- MAR %>% select(YEAR, Cod_4X, Haddock_4X, SilverHake_4X, Redfish_4X, Halibut_4X, Dogfish_4X) %>% gather("species", "tonnes", 2:7)
+
+MAR2_4X <- MAR %>% select(YEAR, TotDemersal_4X)
+
+
+```
+
+```{r 4VW Demersal English Fish Plot echo=FALSE, warning=FALSE, include=FALSE}
+
+#ENGLISH VERSION
+
+#4VW Plot
+
+#Colours for species
+col <- c("Cod_4VW" = "#00bcd4",
+    "Redfish_4VW" = "#E91E63",
+    "Haddock_4VW" = "#FDD835",
+    "SilverHake_4VW" = "#80DEEA",
+    "Dogfish_4VW" = "#000000",
+    "Halibut_4VW" = "#F8BBD0")
+col2 <- c("TotDemersal_4VW" = "grey90")
+
+#Legend labels
+txt <- c("Cod_4VW" = "Atlantic cod",
+    "Redfish_4VW" = "Redfish",
+    "Haddock_4VW" = "Haddock",
+    "SilverHake_4VW" = "Silver hake",
+    "Dogfish_4VW" = "Spiny dogfish",
+    "Halibut_4VW" = "Atlantic halibut")
+txt2 <- c("TotDemersal_4VW" = "4VW survey total demersal fish biomass")
+
+P1 <- ggplot(NULL) +
+  geom_col(data=MAR2_4VW, aes(x=YEAR, y=TotDemersal_4VW/1000, fill="TotDemersal_4VW")) +
+  geom_line(data=MAR_4VW, aes(x=YEAR, y=tonnes/1000, colour=species), size=1) +
+  geom_point(data=MAR_4VW, aes(x=YEAR, y=tonnes/1000, colour=species)) +
+  scale_fill_manual(values=col2, labels=txt2) +
+  scale_colour_manual(values = col, labels=txt) +
+  scale_y_continuous(expand=c(0,0), limits = c(0, 800)) +
+  scale_x_continuous(expand = c(0,0.5), limits = c(1969, 2022))
+  
+P1 + ggtitle("4VW Scotian Shelf Survey - Demersal Fish") +
+  labs(y=("Survey Biomass (thousands of tonnes)")) +
+  theme(plot.title = element_text(size=12),
+        panel.background = element_rect(fill = "white"),
+        panel.border = element_rect(fill = NA, colour = "black", size = 1.5),
+        legend.position = c(0.8,0.8),
+        legend.text = element_text(size=8),
+        legend.title=element_blank(),
+        legend.spacing.y = unit(-0.2, "cm"),
+        axis.title.x=element_blank(),
+        axis.title.y = element_text(size = 12),
+        axis.text.y = element_text(size = 10))
+
+#ggsave("MAR-4VWDemersal.png", device = "png", units="in", width = 9, height = 4.9, dpi = 300)
+  
+```
+
+```{r 4VW Demersal French Fish Plot echo=FALSE, warning=FALSE, include=FALSE}
+
+#FRENCH VERSION
+
+#4VW Plot
+
+#Colours for species
+col <- c("Cod_4VW" = "#00bcd4",
+    "Redfish_4VW" = "#E91E63",
+    "Haddock_4VW" = "#FDD835",
+    "SilverHake_4VW" = "#80DEEA",
+    "Dogfish_4VW" = "#000000",
+    "Halibut_4VW" = "#F8BBD0")
+col2 <- c("TotDemersal_4VW" = "grey90")
+
+#Legend labels
+txt <- c("Cod_4VW" = "Morue franche",
+    "Redfish_4VW" = "S?baste",
+    "Haddock_4VW" = "Aiglefin",
+    "SilverHake_4VW" = "Merlu argent?",
+    "Dogfish_4VW" = "Aiguillat commun",
+    "Halibut_4VW" = "Fl?tan de l'Atlantique")
+txt2 <- c("TotDemersal_4VW" = "Biomasse de poissons d?mersaux combin?s \n dans les divisions 4VW")
+
+P1 <- ggplot(NULL) +
+  geom_col(data=MAR2_4VW, aes(x=YEAR, y=TotDemersal_4VW/1000, fill="TotDemersal_4VW")) +
+  geom_line(data=MAR_4VW, aes(x=YEAR, y=tonnes/1000, colour=species), size=1) +
+  geom_point(data=MAR_4VW, aes(x=YEAR, y=tonnes/1000, colour=species)) +
+  scale_fill_manual(values=col2, labels=txt2) +
+  scale_colour_manual(values = col, labels=txt) +
+  scale_y_continuous(expand=c(0,0), limits = c(0, 800)) +
+  scale_x_continuous(expand = c(0,0.5), limits = c(1969, 2022))
+  
+P1 + ggtitle("4VW Scotian Shelf Survey - Demersal Fish *FRENCH") +
+  labs(y=("Biomasse d?riv?e des relev?s (milliers de tonnes)")) +
+  theme(plot.title = element_text(size=12),
+        panel.background = element_rect(fill = "white"),
+        panel.border = element_rect(fill = NA, colour = "black", size = 1.5),
+        legend.position = c(0.7,0.75),
+        legend.text = element_text(size=8),
+        legend.title=element_blank(),
+        legend.spacing.y = unit(-0.2, "cm"),
+        axis.title.x=element_blank(),
+        axis.title.y = element_text(size = 12),
+        axis.text.y = element_text(size = 10))
+
+#ggsave("MAR-4VWDemersal_FR.png", device = "png", units="in", width = 9, height = 4.9, dpi = 300)
+
+```
+
+
+```{r English 4X plot}
+
+#4X East Plot
+
+#Colours for species
+col3 <- c("Cod_4X" = "#00bcd4",
+    "Redfish_4X" = "#E91E63",
+    "Haddock_4X" = "#FDD835",
+    "SilverHake_4X" = "#80DEEA",
+    "Dogfish_4X" = "#000000",
+    "Halibut_4X" = "#F8BBD0")
+col4 <- c("TotDemersal_4X" = "grey90")
+
+#Legend labels
+txt3 <- c("Cod_4X" = "Atlantic cod",
+    "Redfish_4X" = "Redfish",
+    "Haddock_4X" = "Haddock",
+    "SilverHake_4X" = "Silver hake",
+    "Dogfish_4X" = "Spiny dogfish",
+    "Halibut_4X" = "Atlantic halibut")
+txt4 <- c("TotDemersal_4X" = "4X survey total demersal fish biomass")
+
+  
+P2 <- ggplot(NULL)+
+  geom_col(data=MAR2_4X, aes(x=YEAR, y=TotDemersal_4X/1000, fill="TotDemersal_4X")) +
+  geom_line(data=MAR_4X, aes(x=YEAR, y=tonnes/1000, colour=species), size=1) +
+  geom_point(data=MAR_4X, aes(x=YEAR, y=tonnes/1000, colour=species)) +
+  scale_colour_manual(values = col3, labels=txt3) +
+  scale_fill_manual(values = col4, labels=txt4) +
+  scale_y_continuous(expand = c(0,0.5), limits = c(0,800)) +
+  scale_x_continuous(expand = c(0,0.5), limits = c(1969, 2022))
+  
+P2 + ggtitle("4X Scotian Shelf Survey - Demersal Fish") +
+  labs(y=("Survey Biomass (thousands of tonnes)")) +
+  theme(plot.title = element_text(size=12),
+        panel.background = element_rect(fill = "white"),
+        panel.border = element_rect(fill = NA, colour = "black", size = 1.5),
+        legend.position = c(0.12,0.87),
+        legend.text = element_text(size=8),
+        legend.title=element_blank(),
+        legend.spacing.y = unit(-0.2, "cm"),
+        axis.title.x=element_blank(),
+        axis.title.y = element_text(size = 12),
+        axis.text.y = element_text(size = 10))
+
+#ggsave("MAR-4X-Demersal.png", device = "png", units="in", width = 9, height = 4.9, dpi = 300)
+
+```
+
+```{r French 4X plot}
+
+#4X East Plot
+
+#Colours for species
+col3 <- c("Cod_4X" = "#00bcd4",
+    "Redfish_4X" = "#E91E63",
+    "Haddock_4X" = "#FDD835",
+    "SilverHake_4X" = "#80DEEA",
+    "Dogfish_4X" = "#000000",
+    "Halibut_4X" = "#F8BBD0")
+col4 <- c("TotDemersal_4X" = "grey90")
+
+#Legend labels
+txt3 <- c("Cod_4X" = "Morue franche",
+    "Redfish_4X" = "S?baste",
+    "Haddock_4X" = "Aiglefin",
+    "SilverHake_4X" = "Merlu argent?",
+    "Dogfish_4X" = "Aiguillat commun",
+    "Halibut_4X" = "Fl?tan de l'Atlantique")
+txt4 <- c("TotDemersal_4X" = "Biomasse de poissons d?mersaux combin?s \n dans les divisions 4X")
+
+
+P2 <- ggplot(NULL)+
+  geom_col(data=MAR2_4X, aes(x=YEAR, y=TotDemersal_4X/1000, fill="TotDemersal_4X")) +
+  geom_line(data=MAR_4X, aes(x=YEAR, y=tonnes/1000, colour=species), size=1) +
+  geom_point(data=MAR_4X, aes(x=YEAR, y=tonnes/1000, colour=species)) +
+  scale_colour_manual(values = col3, labels=txt3) +
+  scale_fill_manual(values = col4, labels=txt4) +
+  scale_y_continuous(expand = c(0,0.5), limits = c(0,800)) +
+  scale_x_continuous(expand = c(0,0.5), limits = c(1969, 2022))
+  
+P2 + ggtitle("4X Scotian Shelf Survey - Demersal Fish *FRENCH") +
+  labs(y=("Biomasse d?riv?e des relev?s (milliers de tonnes)")) +
+  theme(plot.title = element_text(size=12),
+        legend.position = c(0,0.8),
+        legend.text = element_text(size=8),
+        legend.title=element_blank(),
+        legend.spacing.y = unit(-0.2, "cm"),
+        axis.title.x=element_blank(),
+        axis.title.y = element_text(size = 12),
+        axis.text.y = element_text(size = 10))
+
+#ggsave("MAR-4X-Demersal_FR.png", device = "png", units="in", width = 9, height = 4.9, dpi = 300)
+
+```
+

@@ -1,0 +1,103 @@
+---
+title: "Scotian Shelf - Update Jan 2022"
+author: "Robyn Jamieson"
+date: "July 26, 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## This script was pulled from 2018 Scotian Shelf ALL-PLOTs file
+## Updated Jan 2022 to fix broken formatting from 2018 figures
+## English and French versions
+
+
+```{r Setup, echo=FALSE, warning=FALSE, include=FALSE}
+#clean the workspace
+rm(list=ls())
+
+#setwd()
+
+library(readr)
+library(tidyr)
+library(dplyr)
+library(ggplot2)
+library(cowplot)
+library(scales)
+
+```
+
+
+####Pelagic Fish  
+
+Data: 1970-2017  
+
+No species specific data given. 
+
+Landings in tonnes as landings are more reliable than the bottom trawl survey for pelagics.
+
+
+```{r echo=FALSE, warning=FALSE, include=FALSE}
+
+#Scotian Shelf Pelagic Fish Plot
+
+#Import data and gather species into one factor variable
+
+MAR <- read_csv("MAR-pelagics.csv")
+
+
+```
+
+```{r English Pelagics Plot echo=FALSE, warning=FALSE}
+
+#Plot data with total catch as a filled area and each species as a line
+
+P2 <-  ggplot(NULL) +
+  geom_col(data = MAR, aes(x = YEAR, y=Landings_x),
+              fill="slategray2") +
+  labs(y = "Commerical Landings (thousands of tonnes)") +
+  scale_y_continuous(expand = c(0,0), limits = c(0, 300)) +
+  scale_x_continuous(expand = c(0,0.5), limits = c(1970, 2020))
+
+P2 +  ggtitle("Scotian Shelf Pelagic Fish Commercial Landings") +
+  theme(plot.title = element_text(size=12),
+        axis.title.x=element_blank(),
+        axis.title.y = element_text(size=12),
+        axis.text.y = element_text(size=10),
+        panel.background = element_rect(fill = "white"),
+        panel.border = element_rect(fill = NA, colour = "black", size = 1.5))
+
+#ggsave("MAR-Pelagic_EN.png", device = "png", units="in", width = 9, height = 4.9, dpi = 300)
+
+
+#For area graph:geom_ribbon(data = MAR, aes(x = YEAR, ymin=0, ymax=Landings), fill="grey90")
+
+```
+
+```{r French Pelagics Plot}
+
+#FRENCH VERSION
+
+P2 <-  ggplot(NULL) +
+  geom_col(data = MAR, aes(x = YEAR, y=Landings_x),
+              fill="slategray2") +
+  labs(y = "D?barquements de la p?che commerciale \n(milliers de tonnes)") +
+  scale_y_continuous(expand = c(0,0), limits = c(0, 300)) +
+  scale_x_continuous(expand = c(0,0.5), limits = c(1970, 2020))
+
+P2 +  ggtitle("Scotian Shelf Pelagic Fish Commercial Landings *FRENCH") +
+  theme(plot.title = element_text(size=12),
+        axis.title.x=element_blank(),
+        axis.title.y = element_text(size=12),
+        axis.text.y = element_text(size=10),
+        panel.background = element_rect(fill = "white"),
+        panel.border = element_rect(fill = NA, colour = "black", size = 1.5))
+
+#ggsave("MAR-Pelagic_FR.png", device = "png", units="in", width = 9, height = 4.9, dpi = 300)
+
+
+```
+
+
