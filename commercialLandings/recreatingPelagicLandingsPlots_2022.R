@@ -18,7 +18,7 @@ load("data/data_priv/SSdata/data/landings/landings.RData") #gets loaded as 'land
 #limit to NAFOS we care about
 tomatch=c('4VN','4VS','4W','4X')
 MAR = landings[ grep(paste(tomatch, collapse = '|'),landings$NAFO_UNIT),]
-sppPelagic<-c(202, 204, 256, 260, 263, 264, 272, 278, 280, 282, 284, 289, 299, 302, 310, 312, 340, 462, 468, 469, 474)
+sppPelagic<- getPelagicSpp_SOTO()
 MAR<-MAR[MAR$YEAR >= 1970 & MAR$YEAR < 2022, ]
 MAR <- MAR[MAR$SPECIES %in% sppPelagic,]
 MAR$CATCH <- MAR$CATCH/1000

@@ -3,6 +3,8 @@
 #' This is an overly complex file used to grab the vectors of (SOTO) species codes making up
 #' the categories of "Pelagic", "Demersal" and "Benthic Invertebrates"
 #' 
+#' Note that these species codfe are specific to SOTO (or SSdata?), so they should not be mixed with MARFIS, COMLAND, CL, etc
+#' 
 #' I've created it this way so that the actual names of species can be listed within each function
 getPelagicSpp_SOTO <- function(){
     # PELAGIC SPECIES
