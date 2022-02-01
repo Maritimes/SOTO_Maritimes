@@ -1,6 +1,7 @@
 
 setwd("C:/git/Maritimes/SOTO_Maritimes/")
 load("data/data_priv/SSdata/data/landings/landings.RData") #gets loaded as 'landings'
+source("C:/git/Maritimes/SOTO_Maritimes/commercialLandings/getCommercialSpp_SOTO.R")
 source("commercialLandings/getCommercialSpp_SOTO.R")
 
 #limit to NAFOS we care about
